@@ -1,7 +1,7 @@
 package com.example.SOC_Lab.Controller;
 
+import com.example.SOC_Lab.Model.User;
 import com.example.SOC_Lab.Service.UserService;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,5 +28,20 @@ public class VulnerableAPIController {
     @PostMapping("/login")
     public String login(@RequestParam String password, @RequestParam String username) {
         return userService.login(username, password);
+    }
+
+    @GetMapping("/download")
+    public String downloadFile(@RequestParam String file) {
+        return userService.readFile(file);
+    }
+
+    @GetMapping(value = "/greet", produces = "text/html")
+    public String greet(@RequestParam String name) {
+        return userService.greetUser(name);
+    }
+
+    @GetMapping("/debug/env")
+    public Map<String, String> getEnv() {
+        return userService.getSystemEnv();
     }
 }

@@ -1,17 +1,18 @@
 package com.example.SOC_Lab.Service;
 
+import com.example.SOC_Lab.Model.User;
 import com.example.SOC_Lab.Repository.UserRepository;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -36,5 +37,24 @@ public class UserServiceImpl implements UserService {
             return "Success! Welcome, " + user.getRoles();
         }
         return "Invalid credentials";
+    }
+
+    @Override
+    public String readFile(String filename) {
+        try {
+            return new String(Files.readAllBytes(Paths.get(filename)));
+        } catch (Exception e) {
+            return "Error reading file: " + e.getMessage();
+        }
+    }
+
+    @Override
+    public String greetUser(String name) {
+        return "<html><body><h1>Hello, " + name + "!</h1></body></html>";
+    }
+
+    @Override
+    public Map<String, String> getSystemEnv() {
+        return System.getenv();
     }
 }
