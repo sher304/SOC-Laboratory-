@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Component
 public class SecurityLogFilter implements Filter {
@@ -23,13 +25,21 @@ public class SecurityLogFilter implements Filter {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String ipAddress = httpRequest.getRemoteAddr();
+        String method = httpRequest.getMethod();
         String uri = httpRequest.getRequestURI();
         String queryString = httpRequest.getQueryString();
 
         String fullUrl = uri + (queryString != null ? "?" + queryString : "");
+        String safeUrl = fullUrl.replace("\"",  "\\\"");
 
-        logger.warn("SOC-Alert! IP: {} is accessing URL: {}", ipAddress, fullUrl);
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
+        String jsonLog = String.format(
+                "{\"timestamp\": \"%s\", \"ip\": \"%s\", \"method\": \"%s\", \"url\": \"%s\"}",
+                timestamp, ipAddress, method, safeUrl
+        );
+
+        logger.warn(jsonLog);
         chain.doFilter(request, response);
     }
 }
