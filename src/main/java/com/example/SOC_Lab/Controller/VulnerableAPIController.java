@@ -16,27 +16,27 @@ public class VulnerableAPIController {
     private UserService userService;
 
     @GetMapping("/search")
-    public List<Map<String, Object>> searchUser(@RequestParam String username) {
+    public List<Map<String, Object>> searchUser(@RequestParam("username") String username) {
         return userService.searchUsers(username);
     }
 
     @GetMapping("/profile/{id}")
-    public User getUserProfile(@PathVariable String id) {
+    public User getUserProfile(@PathVariable("id") String id) {
         return userService.getUserProfile(id);
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String password, @RequestParam String username) {
+    public String login(@RequestParam("password") String password, @RequestParam("username") String username) {
         return userService.login(username, password);
     }
 
     @GetMapping("/download")
-    public String downloadFile(@RequestParam String file) {
+    public String downloadFile(@RequestParam("file") String file) {
         return userService.readFile(file);
     }
 
     @GetMapping(value = "/greet", produces = "text/html")
-    public String greet(@RequestParam String name) {
+    public String greet(@RequestParam("name") String name) {
         return userService.greetUser(name);
     }
 
